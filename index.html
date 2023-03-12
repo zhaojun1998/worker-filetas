@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<title>GitHub 文件加速</title>
+	<title>文件加速</title>
 	<script>
 		function toSubmit (e) {
 			e.preventDefault()
@@ -147,7 +147,7 @@
 	<h1 class="title-h1">文件加速</h1>
 	<form action="./" method="get" class="flex form" onsubmit="toSubmit(event)">
 		<label class="block label-1">
-			<input class="block url" name="q" type="text" placeholder="键入Github文件链接"
+			<input class="block url" name="q" type="text" placeholder="输入 Github 文件链接"
 				pattern="^((https|http):\/\/)?(github\.com\/.+?\/.+?\/(?:releases|archive|blob|raw|suites)|((?:raw|gist)\.(?:githubusercontent|github)\.com))\/.+$"
 				required>
 			<div class="bar"></div>
@@ -157,7 +157,7 @@
 			<p>GitHub 文件链接带不带协议头都可以，支持 release、archive 以及文件，右键复制出来的链接都是符合标准的。</p>
 			<p>release、archive 使用 CloudFlare 加速，文件会跳转至 JsDelivr</p>
 			<p>注意，不支持项目文件夹</p>
-			<p>支持非 GitHub 的文件下载、图片加速</p>
+			<p>支持非 GitHub 的文件下载、图片加速（不支持表单提交方式）</p>
 		</div>
 		<div class="example">
 			<p>分支源码：https://github.com/repo/project/archive/master.zip</p>
