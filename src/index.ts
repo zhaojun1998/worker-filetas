@@ -14,8 +14,7 @@ export default {
 		const whiteList: string[] = []; // 白名单，路径里面有包含字符的才会通过，e.g. ['/username/']
 
 		/** @type {RequestInit} */
-		const PREFLIGHT_INIT = {
-			status: 204,
+		const PREFLIGHT_INIT: RequestInit = {
 			headers: new Headers({
 				'access-control-allow-origin': '*',
 				'access-control-allow-methods': 'GET,POST,PUT,PATCH,TRACE,DELETE,HEAD,OPTIONS',
@@ -48,7 +47,7 @@ export default {
 			let path = urlObj.searchParams.get('q');
 
 			if (path) {
-				return Response.redirect('https://' + urlObj.host + PREFIX + path, 301);
+				return Response.redirect(urlObj.protocol + '//' + urlObj.host + PREFIX + path, 301);
 			}
 
 			const filepath = urlObj.searchParams.get('u');
@@ -57,7 +56,9 @@ export default {
 			}
 
 			// cfworker 会把路径中的 `//` 合并成 `/`
-			path = urlObj.pathname.slice(PREFIX.length).replace(/^https?:\/\//, 'https://');
+			path = urlObj.pathname.slice(PREFIX.length);
+			path = path.replace(/^https:\/\//, 'https://'); // 处理 https
+			path = path.replace(/^http:\/\//, 'http://'); // 处理 http
 
 			if (
 				path.search(exp1) === 0 ||
@@ -85,6 +86,8 @@ export default {
 						'https://cdn.jsdelivr.net/gh'
 					);
 				return Response.redirect(newUrl, 302);
+			} else if (path.match(/^https?:\/\//)) {
+				return fetch(path);
 			} else {
 				return fetch(ASSET_URL + path);
 			}

@@ -56,7 +56,7 @@
 			font-size: 18px;
 			padding: 10px 10px 10px 5px;
 			position: relative;
-			width: 300px;
+			width: 560px;
 			border: none;
 			border-bottom: 1px solid #bfbfbf;
 		}
@@ -144,7 +144,7 @@
 </head>
 
 <body class="flex">
-	<h1 class="title-h1">GitHub 文件加速</h1>
+	<h1 class="title-h1">文件加速</h1>
 	<form action="./" method="get" class="flex form" onsubmit="toSubmit(event)">
 		<label class="block label-1">
 			<input class="block url" name="q" type="text" placeholder="键入Github文件链接"
@@ -154,20 +154,23 @@
 		</label>
 		<input class="block btn" type="submit" value="下载">
 		<div class="tips">
-			<p>GitHub文件链接带不带协议头都可以，支持release、archive以及文件，右键复制出来的链接都是符合标准的，更多用法、clone加速请参考<a
-					href="https://hunsh.net/archives/23/">这篇文章</a>。</p>
-			<p>release、archive使用cf加速，文件会跳转至JsDelivr</p>
+			<p>GitHub 文件链接带不带协议头都可以，支持 release、archive 以及文件，右键复制出来的链接都是符合标准的。</p>
+			<p>release、archive 使用 CloudFlare 加速，文件会跳转至 JsDelivr</p>
 			<p>注意，不支持项目文件夹</p>
+			<p>支持非 GitHub 的文件下载、图片加速</p>
 		</div>
 		<div class="example">
-			<p>分支源码：https://github.com/hunshcn/project/archive/master.zip</p>
-			<p>release源码：https://github.com/hunshcn/project/archive/v0.1.0.tar.gz</p>
-			<p>release文件：https://github.com/hunshcn/project/releases/download/v0.1.0/example.zip</p>
-			<p>分支文件：https://github.com/hunshcn/project/blob/master/filename</p>
+			<p>分支源码：https://github.com/repo/project/archive/master.zip</p>
+			<p>tag 源码：https://github.com/repo/project/archive/v0.1.0.tar.gz</p>
+			<p>分支文件：https://github.com/repo/project/blob/master/filename</p>
+			<p>tag 文件：https://github.com/repo/project/releases/download/v0.1.0/example.zip</p>
+			<p>非 GitHub 图片加速显示：https://gh.869.pw/https://xxx.com/logo.png</p>
+			<p>非 GitHub 文件加速下载：https://gh.869.pw/https://xxx.com/example.zip</p>
 		</div>
 	</form>
 	<p class="p-1">
-		项目基于Cloudflare Workers，开源于GitHub <a class="a-1" href="https://github.com/hunshcn/gh-proxy">hunshcn/gh-proxy</a>
+		由 Cloudflare Workers 支持，源码 <a class="a-1" href="https://codeberg.org/ghproxy/pages">ghproxy/pages</a>，基于 <a
+			class="a-1" href="https://github.com/hunshcn/gh-proxy">hunshcn/gh-proxy</a> 修改。
 	</p>
 </body>
 
