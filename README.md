@@ -2,8 +2,8 @@
 
 文件加速 Cloudflare Workers
 
-- https://jihulab.com/jetsung/ghproxy
-- https://github.com/jetsung/ghproxy
+- https://jihulab.com/devdo/ghproxy
+- https://github.com/devdoz/ghproxy
 
 **预览网址：**
 
