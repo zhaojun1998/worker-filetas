@@ -1,12 +1,10 @@
 export default {
 	async fetch(request: Request) {
-		/**
-		 * static files (404.html, sw.js, conf.js)
-		 */
 		const ASSET_URL = 'https://ghproxy.codeberg.page';
-		// 前缀，如果自定义路由为example.com/gh/*，将PREFIX改为 '/gh/'，注意，少一个杠都会错！
+
+		// 前缀，如果自定义路由为 example.com/gh/*，将 PREFIX 改为 '/gh/'，注意，少一个杠都会错！
 		const PREFIX = '/';
-		// 分支文件使用jsDelivr镜像的开关，0为关闭，默认关闭
+		// 分支文件使用 jsDelivr 镜像的开关，0 为关闭，默认关闭
 		const Config = {
 			jsdelivr: 0,
 		};
@@ -29,7 +27,8 @@ export default {
 		const exp5 = /^(?:https?:\/\/)?gist\.(?:githubusercontent|github)\.com\/.+?\/.+?\/.+$/i;
 		const exp6 = /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/tags.*$/i;
 
-		const checkUrl = (u: string) => {
+		// 判断网址是 GitHub
+		const checkIsGithub = (u: string) => {
 			for (let i of [exp1, exp2, exp3, exp4, exp5, exp6]) {
 				if (u.search(i) === 0) {
 					return true;
@@ -38,18 +37,80 @@ export default {
 			return false;
 		};
 
-		/**
-		 * @param {Request} req
-		 */
+		async function proxy(urlObj: URL, reqInit: ResponseInit): Promise<Response> {
+			const res = await fetch(urlObj.href, reqInit);
+			const resHdrOld = res.headers;
+			const resHdrNew = new Headers(resHdrOld);
+			const status = res.status;
+
+			if (resHdrNew.has('location')) {
+				const _location_data = resHdrNew.get('location');
+				const _location = _location_data ?? '';
+				if (checkIsGithub(_location)) {
+					resHdrNew.set('location', PREFIX + _location);
+				} else {
+					return proxy(new URL(_location), reqInit);
+				}
+			}
+
+			resHdrNew.set('access-control-expose-headers', '*');
+			resHdrNew.set('access-control-allow-origin', '*');
+
+			resHdrNew.delete('content-security-policy');
+			resHdrNew.delete('content-security-policy-report-only');
+			resHdrNew.delete('clear-site-data');
+
+			return new Response(res.body, {
+				status,
+				headers: resHdrNew,
+			});
+		}
+
+		const httpHandler = (req: Request, pathname: string) => {
+			// preflight
+			if (req.method === 'OPTIONS' && req.headers.has('access-control-request-headers')) {
+				return new Response(null, PREFLIGHT_INIT);
+			}
+
+			// 白名单
+			let urlStr = pathname;
+			let flag = !Boolean(whiteList.length);
+			for (let i of whiteList) {
+				if (urlStr.includes(i)) {
+					flag = true;
+					break;
+				}
+			}
+			if (!flag) {
+				return new Response('blocked', { status: 403 });
+			}
+
+			// GitHub
+			if (urlStr.startsWith('github')) {
+				urlStr = 'https://' + urlStr;
+			}
+			const urlObj: URL = new URL(urlStr);
+
+			// 请求信息
+			const reqInit: RequestInit = {
+				headers: req.headers,
+				method: req.method,
+				body: req.body,
+				redirect: 'manual',
+			};
+			return proxy(urlObj, reqInit);
+		};
+
 		const fetchHandler = async (req: Request) => {
-			const urlStr = req.url;
-			const urlObj = new URL(urlStr);
+			const urlObj = new URL(req.url);
 			let path = urlObj.searchParams.get('q');
 
+			// ?q=xxxx 跳转
 			if (path) {
 				return Response.redirect(urlObj.protocol + '//' + urlObj.host + PREFIX + path, 301);
 			}
 
+			// ?u=xxx 拉取
 			const filepath = urlObj.searchParams.get('u');
 			if (filepath) {
 				return fetch(filepath);
@@ -87,85 +148,11 @@ export default {
 					);
 				return Response.redirect(newUrl, 302);
 			} else if (path.match(/^https?:\/\//)) {
-				return fetch(path);
+				return httpHandler(req, path);
 			} else {
 				return fetch(ASSET_URL + path);
 			}
 		};
-
-		/**
-		 * @param {Request} req
-		 * @param {string} pathname
-		 */
-		const httpHandler = (req: Request, pathname: string) => {
-			const reqHdrRaw = req.headers;
-
-			// preflight
-			if (req.method === 'OPTIONS' && reqHdrRaw.has('access-control-request-headers')) {
-				return new Response(null, PREFLIGHT_INIT);
-			}
-
-			const reqHdrNew = new Headers(reqHdrRaw);
-
-			let urlStr = pathname;
-			let flag = !Boolean(whiteList.length);
-			for (let i of whiteList) {
-				if (urlStr.includes(i)) {
-					flag = true;
-					break;
-				}
-			}
-			if (!flag) {
-				return new Response('blocked', { status: 403 });
-			}
-			if (urlStr.startsWith('github')) {
-				urlStr = 'https://' + urlStr;
-			}
-			const urlObj: URL = new URL(urlStr);
-
-			/** @type {RequestInit} */
-			const reqInit: RequestInit = {
-				method: req.method,
-				headers: reqHdrNew,
-				redirect: 'manual',
-				body: req.body,
-			};
-			return proxy(urlObj, reqInit);
-		};
-
-		/**
-		 *
-		 * @param {URL} urlObj
-		 * @param {RequestInit} reqInit
-		 */
-		async function proxy(urlObj: URL, reqInit: ResponseInit): Promise<Response> {
-			const res = await fetch(urlObj.href, reqInit);
-			const resHdrOld = res.headers;
-			const resHdrNew = new Headers(resHdrOld);
-			const status = res.status;
-
-			if (resHdrNew.has('location')) {
-				const _location_data = resHdrNew.get('location');
-				const _location = _location_data ?? '';
-				if (checkUrl(_location)) {
-					resHdrNew.set('location', PREFIX + _location);
-				} else {
-					return proxy(new URL(_location), reqInit);
-				}
-			}
-
-			resHdrNew.set('access-control-expose-headers', '*');
-			resHdrNew.set('access-control-allow-origin', '*');
-
-			resHdrNew.delete('content-security-policy');
-			resHdrNew.delete('content-security-policy-report-only');
-			resHdrNew.delete('clear-site-data');
-
-			return new Response(res.body, {
-				status,
-				headers: resHdrNew,
-			});
-		}
 
 		return fetchHandler(request);
 	},
