@@ -1,27 +1,24 @@
-# ghproxy
+# 文件加速
 
-文件加速 Cloudflare Workers
+基于 Cloudflare Workers 服务的**文件加速**项目
 
-- https://jihulab.com/devdo/ghproxy
-- https://github.com/devdoz/ghproxy
+- https://jihulab.com/devdo/worker-fileproxy
+- https://github.com/devdoz/worker-fileproxy
 
 **预览网址：**
 
-1. https://gh.869.pw
-2. https://ghproxy.ixxx.workers.dev
+1. https://cfile.kkgo.cc
+2. https://cfile.078.eu
+3. https://fileproxy.ixxx.workers.dev
 
-本项目参考 [hunshcn/gh-proxy](https://github.com/hunshcn/gh-proxy)，并作了一定的修改：
-
-- 使用 `typescript` 重写；
 - 仅支持 [`CloudFlare Workers` 项目](https://developers.cloudflare.com/workers/)；
-- 支持非 GitHub 项目文件加速；
 
   ```bash
    # 图片会直接显示
-   https://gh.869.pw/https://kernel.org/theme/images/logos/tux.png
+   https://cfile.kkgo.cc/https://kernel.org/theme/images/logos/tux.png
 
    # 文件会直接下载
-   https://gh.869.pw/https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.18.tar.xz
+   https://cfile.kkgo.cc/https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.18.tar.xz
   ```
 
 ## 布署教程
@@ -38,22 +35,25 @@
    wrangler login
 
    # 若登录不成功，可能需要使用代理。
-   # 每个命令行前，均需要加 HTTP_PROXY=http://localhost:20171
+   # 每个命令行前，均需要加 HTTP_PROXY=http://localhost:20171 （需自行修改）
    HTTP_PROXY=http://localhost:20171 wrangler login
    ```
 
 4. 拉取本项目：
 
    ```bash
-   git clone https://jihulab.com/jetsung/ghproxy.git
+   git clone https://jihulab.com/devdo/worker-fileproxy.git
    ```
 
-5. 修改 `wrangler.toml` 文件中的 `name`（ghproxy）为服务名 `xxx`（访问域名为：`xxx.***.workers.dev`）
-6. 修改 `src/index.ts` 文件中的 `ASSET_URL` 为 `index.html` 的网址（**若不需要界面，可以忽略**）
+5. 修改 `wrangler.toml` 文件中的 `name`（fileproxy）为服务名 `xxx`（访问域名为：`xxx.***.workers.dev`）
+
+6. 本地测试
+
    ```bash
-     # 可将本项目 index.html 放置到静态网站，再将下面变量值修改为该网址
-    const ASSET_URL = 'https://ghproxy.codeberg.page';
+   npm install
+   npm run dev
    ```
+
 7. 发布
 
    ```bash
