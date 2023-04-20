@@ -1,15 +1,15 @@
 # 文件加速
 
-基于 Cloudflare Workers 服务的**文件加速**项目
+基于 Cloudflare Workers 的文件传输加速服务 (File transfer acceleration service)
 
-- https://jihulab.com/devdo/worker-fileproxy
-- https://github.com/devdoz/worker-fileproxy
+- https://jihulab.com/devdo/worker-filetas
+- https://github.com/devdoz/worker-filetas
 
 **预览网址：**
 
 1. https://cfile.kkgo.cc
 2. https://cfile.078.eu
-3. https://fileproxy.ixxx.workers.dev
+3. https://filetas.ixxx.workers.dev
 
 - 仅支持 [`CloudFlare Workers` 项目](https://developers.cloudflare.com/workers/)；
 
@@ -42,10 +42,10 @@
 4. 拉取本项目：
 
    ```bash
-   git clone https://jihulab.com/devdo/worker-fileproxy.git
+   git clone https://jihulab.com/devdo/worker-filetas.git
    ```
 
-5. 修改 `wrangler.toml` 文件中的 `name`（fileproxy）为服务名 `xxx`（访问域名为：`xxx.***.workers.dev`）
+5. 修改 `wrangler.toml` 文件中的 `name`（filetas）为服务名 `xxx`（访问域名为：`xxx.***.workers.dev`）
 
 6. 本地测试
 

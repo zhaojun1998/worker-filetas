@@ -118,7 +118,7 @@ export const htmlTemplate = `
 	</div>
 	<div class="copyright">
 		<p class="p-1">
-			© 2023 Base Cloudflare Workers | Powered by <a class="a-1" href="https://blog.jetsung.com" target="_black">Jetsung</a> | Project <a class="a-1" href="https://jihulab.com/devdo/worker-fileproxy" target="_black">worker-fileproxy</a>
+			© 2023 Base Cloudflare Workers | Powered by <a class="a-1" href="https://blog.jetsung.com" target="_black">Jetsung</a> | Project <a class="a-1" href="https://jihulab.com/devdo/worker-filetas" target="_black">worker-filetas</a>
 		</p>
 	</div>
 </body>
