@@ -7,8 +7,8 @@
 
 **预览网址：**
 
-1. https://cfile.kkgo.cc
-2. https://cfile.078.eu
+1. https://wfile.kkgo.cc
+2. https://filetas.w.skiy.net
 3. https://filetas.ixxx.workers.dev
 
 - 仅支持 [`CloudFlare Workers` 项目](https://developers.cloudflare.com/workers/)；
@@ -57,7 +57,7 @@
 7. 发布
 
    ```bash
-    HTTP_PROXY=http://localhost:20171 wrangler publish
+    HTTP_PROXY=http://localhost:20171 wrangler deploy
    ```
 
    发布成功将会显示对应的网址
@@ -89,5 +89,5 @@ $ cd my-project && npm install && npm run dev
 ```
 
 ```bash
-HTTP_PROXY=http://localhost:20171 wrangler publish
+HTTP_PROXY=http://localhost:20171 wrangler deploy
 ```

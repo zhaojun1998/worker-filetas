@@ -98,7 +98,9 @@ export const htmlTemplate = `
 		function toSubmit (e) {
 			e.preventDefault()
 			const fileUrlInput = downloadForm.querySelector('input[name="fileUrl"]')
-			const reqUrl = location.origin + '/' + fileUrlInput.value
+			// 编码 fileUrl
+			const encodedFileUrl = encodeURIComponent(fileUrlInput.value);
+			const reqUrl = location.origin + '/' + encodedFileUrl
 
 			window.open(reqUrl)
 			// location.href = reqUrl
